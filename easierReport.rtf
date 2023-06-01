@@ -1,0 +1,51 @@
+Overview:
+I am developing a system to recommend targeted Ads and relevant videos tailored to individual users.
+
+Easy Question:
+
+Given a video, which Ads are relevant to it?
+
+Example if zeko is watching abozaid English video what Ads to show to him,
+obviously, if i have an english Ad he will be seeing it. 
+
+
+This question is easy because it can be answered by using the tags associated with the video. For example, if a video is tagged with "funny" and "cat," then Ads for cat toys or funny cat videos would be relevant.
+
+
+Algorithm And Data Structures: I will use a
+Name: Video
+Purpose and description of class: this class is will capture name, title, tags, etc...
+Some getters and setters, compartion, compute similarty using Ad or a video.
+
+Name: Ad
+Purpose and description of class: this class will capture  name, description, etc...
+
+Name: user
+purpose: caputre user watching history
+
+Upload every video: to the network.
+Second, for each Ad analyize the network and connect the Ad to similar video.
+
+Third: 
+    Jaccard index: The Jaccard index is a measure of the similarity between two sets. It is calculated by dividing the number of elements that are in both sets by the total number of elements in the union of the two sets.
+
+    Cosine similarity: The cosine similarity is a measure of the similarity between two vectors. It is calculated by taking the dot product of the two vectors and dividing it by the product of their lengths.
+
+Algorithm Analysis, Limitations and Risks:
+Your proposed algorithm is a good starting point for recommending targeted ads and relevant videos to individual users. However, there are a few limitations and risks that you should be aware of.
+
+One limitation is that the algorithm relies on the tags associated with the video. If the tags are not accurate or up-to-date, then the algorithm may not be able to recommend relevant ads or videos.
+
+Another limitation is that the algorithm does not take into account the user's viewing history. This means that the algorithm may recommend ads or videos that the user has already seen.
+
+Finally, the algorithm is susceptible to bias. For example, if the algorithm is trained on a dataset of videos that are mostly about cats, then it may be more likely to recommend ads or videos about cats to users.
+
+To address these limitations, you could consider using a more sophisticated algorithm that takes into account the user's viewing history and other factors, such as the user's location, interests, and demographics. You could also consider using a human-in-the-loop approach, where a human reviews the algorithm's recommendations and makes adjustments as needed.
+
+Here are some additional risks to consider:
+
+    Privacy: The algorithm will need to access the user's viewing history and other personal information in order to make recommendations. This raises privacy concerns.
+    Bias: The algorithm could be biased towards certain types of videos or ads. This could lead to discrimination against certain groups of users.
+    Ad fraud: The algorithm could be used to generate fraudulent ad impressions or clicks. This could cost advertisers money.
+
+Overall, your proposed algorithm is a good starting point for recommending targeted ads and relevant videos to individual users. However, there are a number of limitations and risks that you should be aware of before implementing the algorithm.
