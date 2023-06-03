@@ -8,7 +8,6 @@ Given a video, which Ads are relevant to it?
 Example if zeko is watching abozaid English video what Ads to show to him,
 obviously, if i have an english Ad he will be seeing it. 
 
-
 This question is easy because it can be answered by using the tags associated with the video. For example, if a video is tagged with "funny" and "cat," then Ads for cat toys or funny cat videos would be relevant.
 
 
@@ -49,3 +48,31 @@ Here are some additional risks to consider:
     Ad fraud: The algorithm could be used to generate fraudulent ad impressions or clicks. This could cost advertisers money.
 
 Overall, your proposed algorithm is a good starting point for recommending targeted ads and relevant videos to individual users. However, there are a number of limitations and risks that you should be aware of before implementing the algorithm.
+
+Code:
+function getSimilarVideos(ad):
+    videos = create a list of all videos from the adjacency list of the graph
+    # Time complexity: O(V), where V is the number of videos in the graph
+
+    videoSimilarities = create an empty list of VideoSimilarityPair objects
+    # Time complexity: O(1)
+
+    for each video in videos:
+        similarity = getSimilarVideo(ad, video) // Calculate the similarity between the ad and video
+        pair = create a new VideoSimilarityPair object with video and similarity
+        add pair to videoSimilarities list
+    # Time complexity: O(V), where V is the number of videos in the graph
+
+    sort videoSimilarities list based on similarity in descending order
+    # Time complexity: O(V log V), where V is the number of videos in the graph
+
+    sortedVideos = create an empty list of videos
+    # Time complexity: O(1)
+
+    for each pair in videoSimilarities:
+        add pair's video to sortedVideos
+    # Time complexity: O(V), where V is the number of videos in the graph
+
+    return sortedVideos
+    # Time complexity: O(1)
+
