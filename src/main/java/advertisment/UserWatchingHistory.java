@@ -2,6 +2,10 @@ package advertisment;
 
 import java.util.Date;
 
+    /**
+    /*    Represents a user's watching history of a video, including the user's ID, video title, watched duration, and date.
+    /*    Author: Abdalrhman Fawzy
+    */
 public class UserWatchingHistory {
     private int userID;
     private String videoTitle;

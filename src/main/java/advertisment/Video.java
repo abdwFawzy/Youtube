@@ -3,7 +3,13 @@ package advertisment;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
+import java.util.Set;
+import java.util.HashSet;
 
+/**
+ * Represents a video object with various properties and methods related to video content.
+ * @author Abdalrhman fawzy
+ */
 public class Video implements Comparable<Video>{
     private String videoTitle;
     private String channelTitle;
@@ -116,5 +122,65 @@ public class Video implements Comparable<Video>{
     public int compareTo(Video other) {
         return videoTitle.compareTo(other.videoTitle);
     }
+
+    /**
+     * Retrieves a set of attributes associated with the video, including words from the video title,
+     * description, and tags.
+     *
+     * @return A set of attributes derived from the video's title, description, and tags.
+     */
+    public Set<String> getAttributes() {
+        Set<String> attributes = new HashSet<>();
+
+        // Extract words from video title
+        String[] titleArray = videoTitle.replaceAll("[^a-zA-Z ]", "").toLowerCase().split("\\s+");
+        for (String title : titleArray) {
+            attributes.add(title);
+        }
+
+        // Add video title as a separate attribute
+        // attributes.add(videoTitle);
+
+        // Extract words from description
+        String[] descArray = description.replaceAll("[^a-zA-Z ]", "").toLowerCase().split("\\s+");
+        for (String currentDesc : descArray) {
+            attributes.add(currentDesc);
+        }
+
+        // Add tags as attributes
+        // Add tags as attributes (converted to lowercase)
+        for (String tag : tags) {
+            attributes.add(tag.toLowerCase());
+        }
+
+        return attributes;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        Video other = (Video) obj;
+        return videoTitle.equals(other.videoTitle) &&
+                channelTitle.equals(other.channelTitle) &&
+                publishTime.equals(other.publishTime) &&
+                tags.equals(other.tags) &&
+                views == other.views &&
+                likes == other.likes &&
+                dislikes == other.dislikes &&
+                description.equals(other.description) &&
+                commentCount == other.commentCount;
+    }
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Video Title: ").append(videoTitle);
+        return sb.toString();
+    }
+
 }
 
