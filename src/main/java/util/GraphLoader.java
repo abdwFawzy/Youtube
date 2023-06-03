@@ -1,3 +1,26 @@
+/**
+ * The `util` package provides utility classes for various operations and functionalities.
+ * 
+ * The main class in this package is:
+ * - `GraphLoader`: A utility class that facilitates loading graph data from a CSV file into a graph data structure.
+ * 
+ * The package includes methods for loading a graph from a CSV file and opening a file dialog to choose the CSV file interactively.
+ * It relies on the Apache Commons CSV library for parsing CSV files.
+ * 
+ * Example usage:
+ * ```java
+ * GraphLoader graphLoader = new GraphLoader();
+ * Graph graph = new advertismentGraph();
+ * graphLoader.openFile(graph);
+ * ```
+ * 
+ * Dependencies:
+ * - Apache Commons CSV library
+ * 
+ * Authors:
+ * - Abdalrhman Fawzy
+ */
+
 package util;
 
 import org.apache.commons.csv.CSVFormat;
@@ -24,7 +47,7 @@ import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class GraphLoader {
-    public Graph loadGraph(Graph g, String fileName) {
+    public static Graph loadGraph(Graph g, String fileName) {
         try {
             Reader file = new FileReader(fileName);
             CSVParser parser = CSVParser.parse(file, CSVFormat.DEFAULT.withFirstRecordAsHeader());
@@ -46,7 +69,7 @@ public class GraphLoader {
                 Date publishTime = dateFormatter.parse(publishTimeStr);
 
                 Video video = new Video(videoTitle, channelTitle, publishTime, tags, views, likes, dislikes, description, commentCount);
-                g.addVertex(video.hashCode());
+                g.addVertex(video);
             }
 
             file.close();
