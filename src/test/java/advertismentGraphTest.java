@@ -1,7 +1,10 @@
 import graph.advertismentGraph;
 import graph.Graph;
+
 import advertisment.Ad;
 import advertisment.Video;
+import advertisment.VideoSimilarityPair;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -34,6 +37,7 @@ public class advertismentGraphTest {
     public void setUp() {
         graph = new advertismentGraph();
         GraphLoader.loadGraph(graph, "data/Videos_small.csv");
+        graph.calculateSimilarityAndAddEdges();
     }
 
     /**
@@ -58,7 +62,7 @@ public class advertismentGraphTest {
 
         graph.addVertex(video1);
         graph.addVertex(video2);
-        graph.addEdge(video1, video2);
+        graph.addEdge(video1, new VideoSimilarityPair(video2, 3));
 
         assertTrue(graph.hasEdge(video1, video2));
     }
@@ -99,10 +103,11 @@ public class advertismentGraphTest {
      */
     @Test
     public void testExportGraph() {
-        HashMap<Video, HashSet<Video>> exportedGraph = graph.exportGraph();
+        HashMap<Video, HashSet<VideoSimilarityPair>> exportedGraph = graph.exportGraph();
 
         assertNotNull(exportedGraph);
         assertEquals(graph.getAdjacencyList(), exportedGraph);
+        System.out.println(exportedGraph);
     }
 
     /**
@@ -115,7 +120,7 @@ public class advertismentGraphTest {
 
         graph.addVertex(video1);
         graph.addVertex(video2);
-        graph.addEdge(video1, video2);
+        graph.addEdge(video1, new VideoSimilarityPair(video2, 1));
 
         assertTrue(graph.hasEdge(video1, video2));
     }

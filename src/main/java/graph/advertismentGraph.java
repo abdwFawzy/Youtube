@@ -10,6 +10,7 @@ import java.util.Comparator;
 
 import advertisment.Ad;
 import advertisment.Video;
+import advertisment.VideoSimilarityPair;
 
 import similarity.JaccardIndex;
 
@@ -19,8 +20,8 @@ import similarity.JaccardIndex;
  * Author: Abdalrhman Fawzy
  */
 
-public class advertismentGraph implements Graph {
-    private HashMap<Video, HashSet<Video>> adjacencyList;
+public class advertismentGraph implements Graph, GraphAnalyzer{
+    private HashMap<Video, HashSet<VideoSimilarityPair>> adjacencyList;
     private int edges;
 public advertismentGraph() {
         adjacencyList = new HashMap<>();
@@ -32,6 +33,49 @@ public advertismentGraph() {
         if (!adjacencyList.containsKey(video)) {
             adjacencyList.put(video, new HashSet<>());
         }
+    }
+
+    /**
+     * Calculates the similarity between the specified video and other videos in the graph.
+     * It adds weighted edges to the graph based on the similarity calculations.
+     *
+     * @param video The Video object for which similarity is calculated and edges are added.
+     */
+    @Override
+    public void calculateSimilarityAndAddEdges() {
+
+        List<Video> videos = new ArrayList<Video>(adjacencyList.keySet());
+        Set<String> videoSet = new HashSet<String>();
+        Set<String> videoGraphSet = new HashSet<String>();
+
+        for (Video video : videos)
+        {
+            try {
+                videoSet = video.getAttributes();
+            } catch (NullPointerException e) {
+                // Handle the exception gracefully, e.g., provide default values or return an appropriate result
+                System.err.println("Error: Unable to retrieve attributes from the video");
+            }
+
+            for (Video graphVideo : videos)
+            {
+                try {
+                    videoGraphSet = graphVideo.getAttributes();
+                } catch (NullPointerException e) {
+                    // Handle the exception gracefully, e.g., provide default values or return an appropriate result
+                    System.err.println("Error: Unable to retrieve attributes from the video");
+                }
+
+                double similarity = JaccardIndex.calculateJaccardIndex(videoGraphSet, videoSet);
+
+                if (similarity > 0.2)
+                {
+                    if (!video.equals(graphVideo))
+                        addEdge(video, new VideoSimilarityPair(graphVideo, similarity));
+                }
+            }
+        }
+
     }
 
     @Override
@@ -47,9 +91,9 @@ public advertismentGraph() {
     }
 
     @Override
-    public void addEdge(Video from, Video to) {
+    public void addEdge(Video from, VideoSimilarityPair to) {
         addVertex(from);
-        addVertex(to);
+        addVertex(to.getVideo());
 
         adjacencyList.get(from).add(to);
         edges++;
@@ -116,13 +160,24 @@ public advertismentGraph() {
     }
 
     @Override
-    public HashMap<Video, HashSet<Video>> exportGraph() {
+    public HashMap<Video, HashSet<VideoSimilarityPair>> exportGraph() {
         return adjacencyList;
     }
 
     @Override
     public boolean hasEdge(Video source, Video destination) {
-        return adjacencyList.containsKey(source) && adjacencyList.get(source).contains(destination);
+        // Check if the adjacencyList contains the source video
+        if (adjacencyList.containsKey(source)) {
+            // Retrieve the HashSet of VideoSimilarityPair objects for the source video
+            HashSet<VideoSimilarityPair> videoPairs = adjacencyList.get(source);
+            // Iterate through the videoPairs and check if the destination video is present
+            for (VideoSimilarityPair pair : videoPairs) {
+                if (pair.getVideo().equals(destination)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     @Override
@@ -130,35 +185,9 @@ public advertismentGraph() {
         return adjacencyList.containsKey(vertex);
     }
 
-    public HashMap<Video, HashSet<Video>> getAdjacencyList()
+    public HashMap<Video, HashSet<VideoSimilarityPair>> getAdjacencyList()
     {
         return adjacencyList;
-    }
-
-    class VideoSimilarityPair {
-        private Video video;
-        private double similarity;
-
-        public VideoSimilarityPair(Video video, double similarity) {
-            this.video = video;
-            this.similarity = similarity;
-        }
-
-        public Video getVideo() {
-            return video;
-        }
-
-        public double getSimilarity() {
-            return similarity;
-        }
-
-        @Override
-        public String toString() {
-            return "VideoSimilarityPair{" +
-                    "video=" + video +
-                    ", similarity=" + similarity +
-                    '}';
-        }
     }
 }
 

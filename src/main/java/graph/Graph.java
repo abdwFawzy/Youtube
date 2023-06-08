@@ -23,28 +23,63 @@ import java.util.Set;
 
 import advertisment.Ad;
 import advertisment.Video;
+import advertisment.VideoSimilarityPair;
 
+/**
+ * Represents a graph data structure for storing videos.
+ */
 public interface Graph {
-        
+
+    /**
+     * Adds a vertex (video) to the graph.
+     *
+     * @param video The video to be added as a vertex.
+     */
     public void addVertex(Video video);
-    
-    public void addEdge(Video from, Video to);
 
-    public Graph getEgonet(int center);
+    /**
+     * Adds an edge between two videos in the graph.
+     *
+     * @param from The source video from which the edge starts.
+     * @param to   The destination video to which the edge points.
+     */
+    public void addEdge(Video from, VideoSimilarityPair to);
 
-    public List<Graph> getSCCs();
+    /**
+     * Exports the graph as a HashMap representation.
+     *
+     * @return A HashMap representing the graph structure, where each vertex is mapped to a set of VideoSimilarityPair objects.
+     */
+    public HashMap<Video, HashSet<VideoSimilarityPair>> exportGraph();
 
-    public List<Video> getSimilarVideos(Ad ad);   
+    /**
+     * Checks if there is an edge (connection) between the source video and the destination video in the graph.
+     *
+     * @param source      The source video.
+     * @param destination The destination video.
+     * @return true if an edge exists between the source and destination videos, false otherwise.
+     */
+    boolean hasEdge(Video source, Video destination);
 
-	public HashMap<Video, HashSet<Video>> exportGraph();
+    /**
+     * Checks if a given vertex (video) exists in the graph.
+     *
+     * @param vertex The video vertex to check.
+     * @return true if the vertex exists in the graph, false otherwise.
+     */
+    boolean hasVertex(Video vertex);
 
-	boolean hasEdge(Video source, Video destination);
-
-	boolean hasVertex(Video vertex);
-
+    /**
+     * Returns the number of vertices (videos) in the graph.
+     *
+     * @return The number of vertices in the graph.
+     */
     public int getVertices();
 
+    /**
+     * Returns the number of edges in the graph.
+     *
+     * @return The number of edges in the graph.
+     */
     public int getEdges();
-
-} 
-
+}
