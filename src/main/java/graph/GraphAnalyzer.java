@@ -40,5 +40,17 @@ public interface GraphAnalyzer {
      */
      public List<Video> getSimilarVideos(Ad ad);   
 
+    /**
+     * Retrieves a list of videos that are similar to the given video based on a similarity threshold.
+     * The implementation of this method should perform a search algorithm, such as breadth-first search (BFS),
+     * on a graph or data structure representing the relationships between videos.
+     *
+     * @param video                The video for which similar videos are retrieved.
+     * @param similarityThreshold  The similarity threshold for considering a video as similar.
+     *                             Only videos with similarity scores above this threshold will be included in the result.
+     * @return A list of videos that are similar to the given video.
+     */
+     public  List<Video> retrieveSimilarVideos(Video video, double similarityThreshold);
+
 }
 

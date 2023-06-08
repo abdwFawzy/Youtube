@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Set;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Queue;
+import java.util.ArrayDeque;
 
 import advertisment.Ad;
 import advertisment.Video;
@@ -23,13 +25,16 @@ import similarity.JaccardIndex;
 public class advertismentGraph implements Graph, GraphAnalyzer{
     private HashMap<Video, HashSet<VideoSimilarityPair>> adjacencyList;
     private int edges;
-public advertismentGraph() {
-        adjacencyList = new HashMap<>();
-        edges = 0;
-    }
+
+    public advertismentGraph() 
+        {
+            adjacencyList = new HashMap<>();
+            edges = 0;
+        }
 
     @Override
-    public void addVertex(Video video) {
+    public void addVertex(Video video) 
+    {
         if (!adjacencyList.containsKey(video)) {
             adjacencyList.put(video, new HashSet<>());
         }
@@ -42,7 +47,8 @@ public advertismentGraph() {
      * @param video The Video object for which similarity is calculated and edges are added.
      */
     @Override
-    public void calculateSimilarityAndAddEdges() {
+    public void calculateSimilarityAndAddEdges() 
+    {
 
         List<Video> videos = new ArrayList<Video>(adjacencyList.keySet());
         Set<String> videoSet = new HashSet<String>();
@@ -91,7 +97,8 @@ public advertismentGraph() {
     }
 
     @Override
-    public void addEdge(Video from, VideoSimilarityPair to) {
+    public void addEdge(Video from, VideoSimilarityPair to) 
+    {
         addVertex(from);
         addVertex(to.getVideo());
 
@@ -111,7 +118,8 @@ public advertismentGraph() {
         return null;
     }
 
-    private double getSimilarVideo(Ad ad, Video video) {
+    private double getSimilarVideo(Ad ad, Video video) 
+    {
         Set<String> adSet = new HashSet<>();
         Set<String> videoSet = new HashSet<>();
 
@@ -133,7 +141,8 @@ public advertismentGraph() {
     }
 
     @Override
-    public List<Video> getSimilarVideos(Ad ad) {
+    public List<Video> getSimilarVideos(Ad ad) 
+    {
         // TODO: Implement the logic to find and return similar videos based on the given ad
         // You can use the graph's data structure to perform similarity calculations or lookups
         List<Video> videos = new ArrayList<Video>(adjacencyList.keySet());
@@ -157,6 +166,43 @@ public advertismentGraph() {
 
         return sortedVideos;
         
+    }
+
+    /**
+     * Retrieve videos that are similar to the given video.
+     *
+     * @param video                The video for which similar videos are retrieved.
+     * @param similarityThreshold  Similarity threshold for considering a video as similar.
+     * @return List of similar videos.
+     */
+    @Override
+    public List<Video> retrieveSimilarVideos(Video video, double similarityThreshold) {
+        List<Video> similarVideos = new ArrayList<>();
+
+        Queue<Video> queue = new ArrayDeque<>(); // Queue to store videos for BFS traversal
+        Set<Video> visited = new HashSet<>(); // Set to keep track of visited videos
+
+        queue.add(video); // Start the traversal from the given video
+
+        while (!queue.isEmpty() && similarVideos.size() < similarityThreshold) {
+            Video currentVideo = queue.remove(); // Dequeue the current video
+            visited.add(currentVideo);
+
+            // Assuming adjacencyList is a Map<Video, Set<VideoSimilarityPair>> representing the graph structure.
+            Set<VideoSimilarityPair> neighbors = adjacencyList.get(currentVideo);
+
+            for (VideoSimilarityPair neighbor : neighbors) {
+                Video neighborVideo = neighbor.getVideo();
+
+                if (!visited.contains(neighborVideo)) {
+
+                    similarVideos.add(neighborVideo); // Add the neighbor video to the list of similar videos
+                    queue.add(neighborVideo); // Enqueue the neighbor video for further traversal
+                }
+            }
+        }
+
+        return similarVideos; // Return the list of similar videos
     }
 
     @Override

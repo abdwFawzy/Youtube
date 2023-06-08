@@ -137,6 +137,23 @@ public class advertismentGraphTest {
         assertTrue(graph.hasVertex(video));
     }
 
-    // Rest of the test methods...
+    @Test
+    public void testRetrieveSimilarVideos() {
+        // Create test data
+        List<Video> videos = new ArrayList<Video>(graph.exportGraph().keySet());
+        Video video = videos.get(7);
+        System.out.println(video);
+        double similarityThreshold = 199;
 
+        // Call the method under test
+        List<Video> similarVideos = graph.retrieveSimilarVideos(video, similarityThreshold);
+        System.out.println(similarVideos);
+
+        // Perform assertions to validate the results
+        assertNotNull(similarVideos);
+        assertEquals(1, similarVideos.size());
+        // Add more assertions as needed
+    }
+
+    // Rest of the test methods...
 }
