@@ -24,13 +24,19 @@ import similarity.JaccardIndex;
 
 public class advertismentGraph implements Graph, GraphAnalyzer{
     private HashMap<Video, HashSet<VideoSimilarityPair>> adjacencyList;
+    public List<Video> videos;
+    private List<Ad> Ads;
     private int edges;
+    private HashMap<Video, HashSet<Ad>> adMap;
 
     public advertismentGraph() 
-        {
-            adjacencyList = new HashMap<>();
-            edges = 0;
-        }
+    {
+        adjacencyList = new HashMap<>();
+        adMap = new HashMap<>();
+        Ads = new ArrayList<Ad>();
+        videos = new ArrayList<Video>(adjacencyList.keySet()); 
+        edges = 0;
+    }
 
     @Override
     public void addVertex(Video video) 
@@ -38,6 +44,13 @@ public class advertismentGraph implements Graph, GraphAnalyzer{
         if (!adjacencyList.containsKey(video)) {
             adjacencyList.put(video, new HashSet<>());
         }
+    }
+
+    @Override
+    public void addAd(Ad ad)
+    {
+        // Implement this TODO
+        Ads.add(ad);
     }
 
     /**
@@ -50,7 +63,8 @@ public class advertismentGraph implements Graph, GraphAnalyzer{
     public void calculateSimilarityAndAddEdges() 
     {
 
-        List<Video> videos = new ArrayList<Video>(adjacencyList.keySet());
+        videos = new ArrayList<Video>(adjacencyList.keySet()); 
+
         Set<String> videoSet = new HashSet<String>();
         Set<String> videoGraphSet = new HashSet<String>();
 
@@ -74,7 +88,7 @@ public class advertismentGraph implements Graph, GraphAnalyzer{
 
                 double similarity = JaccardIndex.calculateJaccardIndex(videoGraphSet, videoSet);
 
-                if (similarity > 0.2)
+                if (similarity > 0.1)
                 {
                     if (!video.equals(graphVideo))
                         addEdge(video, new VideoSimilarityPair(graphVideo, similarity));
@@ -85,9 +99,50 @@ public class advertismentGraph implements Graph, GraphAnalyzer{
     }
 
     @Override
+    public void calculateSimilarityAndAddEdgesInAds() {
+        for (Video video : videos) {
+            Set<String> videoSet = null;
+            try {
+                videoSet = video.getAttributes();
+            } catch (NullPointerException e) {
+                System.err.println("Error: Unable to retrieve attributes from the video");
+                continue; // Skip to the next video
+            }
+
+            adMap.put(video, new HashSet<Ad>());
+
+            for (Ad ad : Ads) {
+                Set<String> adSet = null;
+                try {
+                    adSet = ad.getAttributes();
+                } catch (NullPointerException e) {
+                    System.err.println("Error: Unable to retrieve attributes from the ad");
+                    continue; // Skip to the next ad
+                }
+
+                double similarity = JaccardIndex.calculateJaccardIndex(adSet, videoSet);
+                if (similarity >= 0.1) {
+                    adMap.get(video).add(ad);
+                }
+            }
+        }
+    }
+
+
+    @Override
     public int getVertices()
     {
         return adjacencyList.size();
+    }
+
+   /**
+    * Returns the List of ads.
+    *
+    * @return The List of ads.
+    */
+    @Override
+    public List<Ad> getAds() {
+        return Ads;
     }
 
     @Override
@@ -137,7 +192,7 @@ public class advertismentGraph implements Graph, GraphAnalyzer{
             System.err.println("Error: Unable to retrieve attributes from the video");
         }
 
-        return JaccardIndex.calculateJaccardIndex(adSet, videoSet);
+        return JaccardIndex.calculateJaccardIndex(videoSet, adSet);
     }
 
     @Override
@@ -145,7 +200,8 @@ public class advertismentGraph implements Graph, GraphAnalyzer{
     {
         // TODO: Implement the logic to find and return similar videos based on the given ad
         // You can use the graph's data structure to perform similarity calculations or lookups
-        List<Video> videos = new ArrayList<Video>(adjacencyList.keySet());
+
+        videos = new ArrayList<Video>(adjacencyList.keySet());
 
         List<VideoSimilarityPair> videoSimilarities = new ArrayList<VideoSimilarityPair>();
 
@@ -158,6 +214,7 @@ public class advertismentGraph implements Graph, GraphAnalyzer{
 
         // Sort the videoSimilarities list based on similarity in descending order
         Collections.sort(videoSimilarities, Comparator.comparingDouble(VideoSimilarityPair::getSimilarity).reversed());
+
 
         List<Video> sortedVideos = new ArrayList<>();
         for (VideoSimilarityPair pair : videoSimilarities) {
@@ -194,15 +251,31 @@ public class advertismentGraph implements Graph, GraphAnalyzer{
             for (VideoSimilarityPair neighbor : neighbors) {
                 Video neighborVideo = neighbor.getVideo();
 
+                if (similarVideos.size() >= similarityThreshold)
+                    break;
+
                 if (!visited.contains(neighborVideo)) {
 
                     similarVideos.add(neighborVideo); // Add the neighbor video to the list of similar videos
                     queue.add(neighborVideo); // Enqueue the neighbor video for further traversal
+                    
                 }
             }
         }
 
         return similarVideos; // Return the list of similar videos
+    }
+
+    /**
+    * Retrieves the set of ads associated with the given video.
+    *
+    * @param video The video for which to retrieve the associated ads.
+    * @return A HashSet of Ad objects associated with the given video.
+    */
+    @Override
+    public HashSet<Ad> retrieveAdsForVideo(Video video)
+    {
+        return adMap.get(video);
     }
 
     @Override
@@ -235,5 +308,11 @@ public class advertismentGraph implements Graph, GraphAnalyzer{
     {
         return adjacencyList;
     }
+
+    public HashMap<Video, HashSet<Ad>> getAdMap()
+    {
+        return adMap;
+    }
+
 }
 

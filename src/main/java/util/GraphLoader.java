@@ -43,8 +43,11 @@ import graph.Graph;
 import advertisment.Video;
 import advertisment.Ad;
 
+import util.AdLoader;
+
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
+
 
 public class GraphLoader {
     public static Graph loadGraph(Graph g, String fileName) {
@@ -76,6 +79,10 @@ public class GraphLoader {
         } catch (IOException | ParseException e) {
             e.printStackTrace();
         }
+
+        ((advertismentGraph) g).calculateSimilarityAndAddEdges();
+        AdLoader.loadAds(g, "data/Adds_small.csv");
+        g.calculateSimilarityAndAddEdgesInAds();
 
         return g;
     }

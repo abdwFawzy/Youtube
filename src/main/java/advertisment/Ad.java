@@ -21,22 +21,23 @@ public class Ad {
     private double cost;
     private String description;
     private String title;
-    private ArrayList<String> tags;
+    private List<String> tags;
 
-    public Ad(int adId, String adTitle, String advertiser,
-              int adDuration, int adViews, int adLikes, double adLikeRate,
-              double adDislikeRate, double adPrice, String adDescription, List<String> adTags) {
+    public Ad(int adId, String product, String company, String adType, int duration, int views, int clicks, double ctr,
+              double conversionRate, double cost, String description, String title, List<String> tags) {
         this.adID = adId;
-        this.title = adTitle;
-        this.description = adDescription;
-        this.company = advertiser;
-        this.duration = adDuration;
-        this.views = adViews;
-        this.clicks = adLikes;
-        this.ctr = adLikeRate;
-        this.conversionRate = adDislikeRate;
-        this.cost = adPrice;
-        this.tags = new ArrayList<>(adTags);
+        this.product = product;
+        this.company = company;
+        this.adType = adType;
+        this.duration = duration;
+        this.views = views;
+        this.clicks = clicks;
+        this.ctr = ctr;
+        this.conversionRate = conversionRate;
+        this.cost = cost;
+        this.description = description;
+        this.title = title;
+        this.tags =  tags;
     }
 
     public Ad(int adID, String product, String company, String adType, int duration) {
@@ -73,13 +74,13 @@ public class Ad {
 //                attributes.add(productWord);
 //            }
 //        }
-//
-//        if (description != null) {
-//            String[] descArray = description.replaceAll("[^a-zA-Z ]", "").toLowerCase().split("\\s+");
-//            for (String descWord : descArray) {
-//                attributes.add(descWord);
-//            }
-//        }
+
+        if (description != null) {
+            String[] descArray = description.replaceAll("[^a-zA-Z ]", "").toLowerCase().split("\\s+");
+            for (String descWord : descArray) {
+                attributes.add(descWord);
+            }
+        }
 
         if (tags != null) {
             // Add tags as attributes (converted to lowercase)
@@ -187,7 +188,7 @@ public class Ad {
         this.title = title;
     }
 
-    public ArrayList<String> getTags() {
+    public List<String> getTags() {
         return tags;
     }
 
@@ -195,4 +196,13 @@ public class Ad {
         this.tags = tags;
     }
 
+    @Override
+    public String toString() {
+        return "Ad{" +
+                "adID=" + adID +
+                ", product='" + product + '\'' +
+                ", description='" + description + '\'' +
+                ", tags=" + tags +
+                '}';
+    }
 }

@@ -3,6 +3,7 @@ package graph;
 import advertisment.Video;
 import advertisment.Ad;
 import java.util.List;
+import java.util.HashSet;
 /**
  * The GraphAnalyzer interface provides methods for analyzing and processing graphs.
  * @author Abdalrhman Fawzy
@@ -24,13 +25,6 @@ public interface GraphAnalyzer {
      */
     public List<Graph> getSCCs();
 
-    /**
-     * Calculates the similarity between a specified vertex (video) and all other videos in the graph.
-     * It then adds edges in the graph based on the similarity calculations.
-     *
-     * @param vertex The Video vertex for which similarity is calculated and edges are added.
-     */
-    public void calculateSimilarityAndAddEdges();
 
     /**
      * Retrieves a list of similar videos based on the provided ad.
@@ -52,5 +46,12 @@ public interface GraphAnalyzer {
      */
      public  List<Video> retrieveSimilarVideos(Video video, double similarityThreshold);
 
+     /**
+     * Retrieves the set of ads associated with the given video.
+     *
+     * @param video The video for which to retrieve the associated ads.
+     * @return A HashSet of Ad objects associated with the given video.
+     */
+    public HashSet<Ad> retrieveAdsForVideo(Video video);
 }
 

@@ -1,6 +1,9 @@
 import graph.advertismentGraph;
 import graph.Graph;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 import advertisment.Ad;
 import advertisment.Video;
 import advertisment.VideoSimilarityPair;
@@ -13,6 +16,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Arrays;
 
 import util.GraphLoader;
 
@@ -37,7 +41,6 @@ public class advertismentGraphTest {
     public void setUp() {
         graph = new advertismentGraph();
         GraphLoader.loadGraph(graph, "data/Videos_small.csv");
-        graph.calculateSimilarityAndAddEdges();
     }
 
     /**
@@ -73,29 +76,15 @@ public class advertismentGraphTest {
     @Test
     public void testGetSimilarVideos() {
         // Create sample data for the test
-        int adId = 1001;
-        String adTitle = "Interactive Cat Toy Set";
-        String advertiser = "FunPlay";
-        String adType = "Pre-roll";
-        int adDuration = 30;
-        int adViews = 10000;
-        int adLikes = 300;
-        double adLikeRate = 0.03;
-        double adDislikeRate = 0.05;
-        double adPrice = 500;
-        String adDescription = "Engage your cat with this interactive toy set";
-        List<String> adTags = new ArrayList<>();
-        adTags.add("Cats");
-        adTags.add("Toys");
-        adTags.add("Entertainment");
-
-        Ad ad = new Ad(adId, adTitle, advertiser, adDuration, adViews, adLikes, adLikeRate, adDislikeRate, adPrice, adDescription, adTags);
-
+        List<Ad> Ads = graph.getAds();
+        Ad ad = Ads.get(5);
         // Perform the test
         List<Video> similarVideos = graph.getSimilarVideos(ad);
-        int similarVideosSize = graph.getSimilarVideos(ad).size();
+        int similarVideosSize = similarVideos.size();
+        assertEquals("Unboxing the Latest Tech Gadgets", similarVideos.get(0).getVideoTitle());
 
-        assertEquals(similarVideos.get(0).getVideoTitle(), "Cute Kittens Playing");
+
+//        assertEquals(similarVideos.get(0).getVideoTitle(), "Cute Kittens Playing");
     }
 
     /**
@@ -107,7 +96,6 @@ public class advertismentGraphTest {
 
         assertNotNull(exportedGraph);
         assertEquals(graph.getAdjacencyList(), exportedGraph);
-        System.out.println(exportedGraph);
     }
 
     /**
@@ -141,13 +129,11 @@ public class advertismentGraphTest {
     public void testRetrieveSimilarVideos() {
         // Create test data
         List<Video> videos = new ArrayList<Video>(graph.exportGraph().keySet());
-        Video video = videos.get(7);
-        System.out.println(video);
-        double similarityThreshold = 199;
+        Video video = videos.get(2);
+        double similarityThreshold = 1;
 
         // Call the method under test
         List<Video> similarVideos = graph.retrieveSimilarVideos(video, similarityThreshold);
-        System.out.println(similarVideos);
 
         // Perform assertions to validate the results
         assertNotNull(similarVideos);
@@ -156,4 +142,17 @@ public class advertismentGraphTest {
     }
 
     // Rest of the test methods...
+
+    @Test
+    public void testRetrieveAdsForVideo()
+    {
+        Video video = graph.videos.get(2);
+
+        // Call the method under test
+        HashSet<Ad> similarAds = graph.retrieveAdsForVideo(video);
+
+        // Perform assertions to validate the results
+        System.out.println(video);
+        System.out.println(similarAds);
+    }
 }

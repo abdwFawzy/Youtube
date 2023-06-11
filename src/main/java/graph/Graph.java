@@ -82,4 +82,32 @@ public interface Graph {
      * @return The number of edges in the graph.
      */
     public int getEdges();
+
+    
+    /**
+     * Adds an advertisement to the graph.
+     *
+     * @param ad The advertisement to add to the graph.
+     */
+    public void addAd(Ad ad);
+
+    /**
+     * Returns the List of ads.
+     *
+     * @return The List of ads.
+     */
+    public List<Ad> getAds();
+
+     /**
+     * Calculates the similarity between a specified vertex (video) and all other videos in the graph.
+     * It then adds edges in the graph based on the similarity calculations.
+     *
+     * @param vertex The Video vertex for which similarity is calculated and edges are added.
+     */
+    public void calculateSimilarityAndAddEdges();
+
+   
+    public void calculateSimilarityAndAddEdgesInAds();
+
+
 }

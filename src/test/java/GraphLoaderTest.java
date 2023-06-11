@@ -31,5 +31,15 @@ public class GraphLoaderTest {
 //        assertEquals(0, graph.getEdges()); // Expected number of edges in the graph
 
     }
+    @Test
+    public void testGetAds()
+    {
+//        System.out.println(graph.getAds());
+    }
+    @Test
+    public void testGetAdMap()
+    {
+        // TODO
+    }
 }
 
