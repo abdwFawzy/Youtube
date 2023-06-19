@@ -1,6 +1,11 @@
+
+package youtube;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
+
+import advertisment.Video;
 
 /**
  * Represents a YouTube channel.
@@ -12,7 +17,6 @@ import java.util.Observable;
 public class YouTubeChannel extends Observable {
     private String name;
     private User creator;
-    private int subscribers;
     private List<Video> videos;
 
     /**
@@ -24,7 +28,6 @@ public class YouTubeChannel extends Observable {
     public YouTubeChannel(String name, User creator) {
         this.name = name;
         this.creator = creator;
-        this.subscribers = 0;
         this.videos = new ArrayList<>();
     }
 
@@ -52,7 +55,7 @@ public class YouTubeChannel extends Observable {
      * @return The number of subscribers to the YouTube channel.
      */
     public int getSubscriberCount() {
-        return this.countObservers();
+        return countObservers();
     }
 
     /**
@@ -67,12 +70,8 @@ public class YouTubeChannel extends Observable {
     /**
      * Increases the subscriber count of the YouTube channel by 1.
      */
-    public void addSubscriber() {
-        subscribers++;
-        
-        // Notify observers of the subscriber count change
-        setChanged();
-        notifyObservers(subscribers);
+    public void addSubscriber(User user) {
+        addObserver(user);
     }
 
     /**
@@ -82,7 +81,6 @@ public class YouTubeChannel extends Observable {
      */
     public void uploadVideo(Video video) {
         videos.add(video);
-        System.out.println("Video '" + video.getTitle() + "' uploaded to " + name + ".");
         
         // Notify observers of the new video uploaded
         setChanged();
